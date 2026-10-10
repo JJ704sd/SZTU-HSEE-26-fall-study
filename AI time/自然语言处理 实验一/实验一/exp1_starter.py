@@ -30,6 +30,10 @@ import unicodedata
 from collections import Counter
 from pathlib import Path
 
+# 控制台一律按 UTF-8 输出：本机默认代码页是 GBK，直接运行会显示乱码，
+# 被 run_all.py 以 UTF-8 捕获时同样会解出乱码。与其余脚本保持一致。
+sys.stdout.reconfigure(encoding="utf-8")
+
 # ============================================================================
 # 第 0 部分：环境自检（对应指导书 3.1 节）
 # ============================================================================

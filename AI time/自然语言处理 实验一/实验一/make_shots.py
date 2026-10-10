@@ -14,6 +14,7 @@ PNG 图片，报告里直接插图——不使用任何示意图或手绘内容�
 """
 
 import sys
+import unicodedata
 from pathlib import Path
 
 sys.stdout.reconfigure(encoding="utf-8")
@@ -76,6 +77,55 @@ def display_width(s):
     return sum(2 if unicodedata.east_asian_width(c) in "WF" else 1 for c in s)
 
 
+MAX_COLS = 190          # 单行折行宽度（列）
+# 为什么是 190：实测各组最长原行有 402~423 列（切词结果把 60 个 token 逐个列出）。
+# 早先按 168 列硬截，等于把这一行悄悄砍掉一半多；改成折行后内容完整。
+#
+# 这个值是**版面换来的**，不是随手取的：报告总页数 10 页是指导书硬上限，而打印字号
+# = 字符宽 / 图宽，图一旦变高，占用的版面就等比变多，页数立刻顶破。实测各档
+# （三张组图，落版宽 9.4cm，格式 = 落版高 / 字号）：
+#   120 列 → 6.4cm / 2.2pt → 报告 11 页（超限）
+#   150 列 → 4.7cm / 1.7pt → 报告 11 页（超限）
+#   190 列 → 3.7cm / 1.4pt → 10 页，且与原 10 页版本高度基本持平
+# 想让截图真正变清晰，只能整页少放内容（删掉与 5.2/5.3 表格重复的 token 明细），
+# 或者把 10 页上限让给截图——两者都要先定夺，不该在排版参数里偷偷做掉。
+
+
+def wrap_cols(s, cols=MAX_COLS, min_tail=16):
+    """把超过 cols 列的一行按显示宽度折行，返回若干行。
+
+    为什么必须折行而不是直接截断：报告要求「截图清晰可读」，而落版宽度固定，
+    打印字号 = 字符宽 / 图宽。图一旦被最长的那行撑到 168 列，其余几十行都跟着
+    被缩小到 ~1.5pt（实测，见 _tools/probe_shots.py），印出来根本读不出来。
+    折行只改变长宽比、不丢任何字符，是唯一不损失信息的做法。
+
+    断点优先落在逗号/空格附近，且保证续行不短于 min_tail 列，避免在行尾
+    孤零零地甩一两个字。纯 ASCII 串按显示宽度切即可。
+    """
+    if display_width(s) <= cols:
+        return [s]
+    parts, rest = [], s
+    while display_width(rest) > cols:
+        # 在最后一列附近找一个像断点的位置
+        cut, acc, best = 0, 0, 0
+        for i, ch in enumerate(rest):
+            w = 2 if unicodedata.east_asian_width(ch) in "WF" else 1
+            if acc + w > cols:
+                break
+            acc += w
+            cut = i + 1
+            if ch in "，。；、,; ":
+                best = i + 1
+        # 断点太靠前（续行会太短）就退回 cols 处的硬边界
+        if best and (cols - display_width(rest[:best])) < min_tail:
+            best = cut
+        parts.append(rest[:best])
+        rest = rest[best:]
+    if rest:
+        parts.append(rest)
+    return parts
+
+
 def colorize(line):
     """按内容给行上色：断言结果、错误、分隔线、标题。"""
     s = line.strip()
@@ -96,6 +146,12 @@ def render(lines, title, out_name, max_lines=None):
     if max_lines:
         lines = lines[:max_lines]
 
+    # 先折行再量宽度：宽度由折行后的最长行决定，图才不会被一行长文本撑爆
+    wrapped = []
+    for ln in lines:
+        wrapped.extend(wrap_cols(ln))
+    lines = wrapped
+
     font = ImageFont.truetype(FONT_PATH, FS * SCALE, index=FONT_INDEX)
     font_sm = ImageFont.truetype(FONT_PATH, int(FS * 0.86) * SCALE, index=FONT_INDEX)
 
@@ -109,7 +165,7 @@ def render(lines, title, out_name, max_lines=None):
     # 宽度按实际最长行计算（CJK 按 2 列计），避免右侧被裁掉
     need_cols = max((display_width(l) for l in lines), default=80)
     need_cols = max(need_cols, display_width(title) + 4)
-    width = int(cw * min(need_cols, 168)) + pad * 2
+    width = int(cw * min(need_cols, MAX_COLS + 8)) + pad * 2
     height = bar_h + pad * 2 + lh * len(lines)
 
     img = Image.new("RGB", (width, height), BG)

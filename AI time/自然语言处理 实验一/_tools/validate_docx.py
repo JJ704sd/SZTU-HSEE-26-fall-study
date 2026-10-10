@@ -7,8 +7,11 @@ from xml.etree import ElementTree as ET
 
 sys.stdout.reconfigure(encoding="utf-8")
 
-DOCX = Path(r"D:\深技大课程学习\AI time\自然语言处理 实验一\报告"
-            r"\学号+姓名+实验1-NLP开发环境与基础文本处理.docx")
+# 默认验正式交付件；也接受 argv[1] 覆盖，用于正式件被 WPS 占用时先验暂存产物。
+# 教训：写死路径 + 忽略 argv 会让人拿旧文件的「全绿」当新文件的结论。
+DOCX = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(
+    r"D:\深技大课程学习\AI time\自然语言处理 实验一\报告"
+    r"\202400502133陈佳豪实验1.docx")
 
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 
@@ -64,12 +67,12 @@ checks = [
     ("三、实验仪器与编程环境", "实验环境"),
     ("四、实验内容", "实验内容"),
     ("五、代码（附注解）与结果分析", "代码与结果"),
-    ("六、实验总结与感悟（AI 辅助说明）", "总结与 AI 说明"),
+    ("六、实验总结与感悟（AI辅助说明）", "总结与 AI 说明"),
     ("七、思考题", "思考题"),
     ("电子签名", "签名栏"),
     ("成绩评定", "成绩评定"),
     ("选做", "选做小节"),
-    ("AI 辅助说明", "AI 使用说明"),
+    ("AI辅助说明", "AI 使用说明"),
 ]
 print("\n章节完整性：")
 for kw, label in checks:

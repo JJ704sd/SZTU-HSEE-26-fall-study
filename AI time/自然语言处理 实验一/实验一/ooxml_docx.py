@@ -29,8 +29,10 @@ FONT_EN = "Times New Roman"
 FONT_MONO = "Consolas"
 
 PAGE_W_CM, PAGE_H_CM = 21.0, 29.7
-MARGIN_T, MARGIN_B, MARGIN_L, MARGIN_R = 2.2, 2.0, 2.5, 2.5
-USABLE_CM = PAGE_W_CM - MARGIN_L - MARGIN_R
+# 页面设置照抄模板 sectPr：pgSz 11906x16838（A4），
+# pgMar top/bottom=1440 twips(2.54cm)，left/right=1800 twips(3.175cm)
+MARGIN_T, MARGIN_B, MARGIN_L, MARGIN_R = 2.54, 2.54, 3.175, 3.175
+USABLE_CM = PAGE_W_CM - MARGIN_L - MARGIN_R      # 14.65cm
 
 
 def esc(t):
@@ -71,10 +73,21 @@ class DocxBuilder:
     def para(self, text="", size=10.5, cjk=FONT_CN, latin=FONT_EN, bold=False,
              align="left", space_before=0, space_after=4, line=16,
              color="000000", indent_first=0, left_indent=0, right_indent=0,
-             shade=None):
-        ppr = [f'<w:spacing w:before="{int(space_before * 20)}" '
-               f'w:after="{int(space_after * 20)}" '
-               f'w:line="{int(line * 20)}" w:lineRule="exact"/>']
+             shade=None, line_rule="exact"):
+        """
+        line_rule="exact"：line 是磅值（固定行距），单位 20 twip/pt
+        line_rule="auto" ：line 是"240 分之一行"（倍数行距），480=2 倍、600=2.5 倍
+        模板封面的字段行就是 spacing(line=600, lineRule=auto)，即 2.5 倍行距。
+        """
+        if line_rule == "auto":
+            sp = (f'<w:spacing w:before="{int(space_before * 20)}" '
+                  f'w:after="{int(space_after * 20)}" '
+                  f'w:line="{int(round(line * 240))}" w:lineRule="auto"/>')
+        else:
+            sp = (f'<w:spacing w:before="{int(space_before * 20)}" '
+                  f'w:after="{int(space_after * 20)}" '
+                  f'w:line="{int(line * 20)}" w:lineRule="exact"/>')
+        ppr = [sp]
         ind = []
         if left_indent:
             ind.append(f'w:left="{int(left_indent * 20)}"')
@@ -91,17 +104,19 @@ class DocxBuilder:
             f"<w:p><w:pPr>{''.join(ppr)}</w:pPr>"
             f'{self._run(text, size, cjk, latin, bold, color)}</w:p>')
 
-    def code_block(self, lines, size=8.5):
+    def code_block(self, lines, size=8.0):
         """等宽代码块：整块同底纹、窄行距、无首行缩进。"""
         for ln in lines:
             self.para(ln if ln else " ", size=size, cjk=FONT_CN, latin=FONT_MONO,
-                      align="left", space_before=0, space_after=0, line=11.5,
+                      align="left", space_before=0, space_after=0, line=10.5,
                       left_indent=0.6, right_indent=0.2, shade="F5F5F0")
         self.para("", size=4, space_after=0, line=5)
 
     def table(self, header, rows, widths=None, size=8.5, caption=None,
-              min_row_h=0):
-        # min_row_h 仅 PDF 后端使用（reportlab 的 MINROWHEIGHTS），OOXML 忽略
+              min_row_h=0, bold_all=False, tbl_width_pct=None,
+              align="center", split_in_row=True):
+        # min_row_h / bold_all / tbl_width_pct 主要供 PDF 后端使用，
+        # OOXML 侧能表达的部分照单实现
         if caption:
             self.para(caption, size=9, cjk=FONT_CN_BOLD, bold=True,
                       space_before=5, space_after=2, line=12)
@@ -116,8 +131,16 @@ class DocxBuilder:
             for s in ("top", "left", "bottom", "right", "insideH", "insideV"))
 
         grid = "".join(f'<w:gridCol w:w="{c}"/>' for c in cols)
+        # tbl_width_pct：不给就是 100% 满宽；给百分比则按比例收窄
+        # （模板的「得分」表是 tblW=0 auto，不是满宽）
+        if tbl_width_pct:
+            tw = f'<w:tblW w:w="{int(tbl_width_pct * 50)}" w:type="pct"/>'
+            cols = [int(c * tbl_width_pct / 100) for c in cols]
+            grid = "".join(f'<w:gridCol w:w="{c}"/>' for c in cols)
+        else:
+            tw = '<w:tblW w:w="5000" w:type="pct"/>'
 
-        out = [f'<w:tbl><w:tblPr><w:tblW w:w="5000" w:type="pct"/>'
+        out = [f'<w:tbl><w:tblPr>{tw}'
                f'<w:tblBorders>{border}</w:tblBorders>'
                f'<w:tblLayout w:type="fixed"/>'
                f'<w:tblCellMar>'
@@ -126,24 +149,32 @@ class DocxBuilder:
                f'</w:tblCellMar></w:tblPr>'
                f'<w:tblGrid>{grid}</w:tblGrid>']
 
-        def row(cells, header_row=False):
+        def row(cells, header_row=False, min_h=0):
             trpr = "<w:trPr><w:tblHeader/></w:trPr>" if header_row else ""
+            if min_h:
+                trpr = (f"<w:trPr>{'<w:tblHeader/>' if header_row else ''}"
+                        f'<w:trHeight w:val="{int(min_h * 20)}" w:hRule="atLeast"/>'
+                        f"</w:trPr>")
             tcs = []
             for j, v in enumerate(cells):
                 shd = ('<w:shd w:val="clear" w:color="auto" w:fill="EDEDED"/>'
-                       if header_row else "")
+                       if header_row and not bold_all else "")
+                bold = header_row or bold_all
+                # 表头居中；数据格按调用方指定。文字型表（align="left"）若也居中，
+                # 短行会被推到中间、末行参差，与正文的左对齐不一致。
+                jc = "center" if header_row else align
                 tcs.append(
                     f'<w:tc><w:tcPr><w:tcW w:w="{cols[j]}" w:type="dxa"/>{shd}'
                     f'<w:vAlign w:val="center"/></w:tcPr>'
                     f'<w:p><w:pPr><w:spacing w:before="10" w:after="10" '
-                    f'w:line="240" w:lineRule="auto"/><w:jc w:val="center"/></w:pPr>'
-                    f'{self._run(v, size, FONT_CN_BOLD if header_row else FONT_CN, FONT_EN, header_row)}'
+                    f'w:line="240" w:lineRule="auto"/><w:jc w:val="{jc}"/></w:pPr>'
+                    f'{self._run(v, size, FONT_CN if bold else FONT_CN, FONT_EN, bold)}'
                     f'</w:p></w:tc>')
             return f"<w:tr>{trpr}{''.join(tcs)}</w:tr>"
 
-        out.append(row(header, True))
+        out.append(row(header, True, 0))
         for r in rows:
-            out.append(row(r))
+            out.append(row(r, False, min_row_h))
         out.append("</w:tbl>")
         self.body.append("".join(out))
         self.para("", size=5, space_after=0, line=6)   # 表后必须有段落
