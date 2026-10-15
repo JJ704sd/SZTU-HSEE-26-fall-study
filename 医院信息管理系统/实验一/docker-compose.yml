@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: openmrs-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
+      MYSQL_DATABASE: openmrs
+      MYSQL_USER: openmrs
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env}
+    volumes:
+      - db_data:/var/lib/mysql
+
+  openmrs:
+    image: openmrs/openmrs-reference-application-distro:latest
+    container_name: openmrs
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_DATABASE: openmrs
+      DB_USERNAME: openmrs
+      DB_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env}
+      DB_CREATE_TABLES: "true"
+      DB_AUTO_UPDATE: "true"
+    ports:
+      - "8080:8080"
+    volumes:
+      - openmrs_data:/usr/local/tomcat/.OpenMRS
+
+volumes:
+  db_data:
+  openmrs_data:
