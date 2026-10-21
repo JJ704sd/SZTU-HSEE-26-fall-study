@@ -135,7 +135,7 @@ def _missing_glyphs(text):
 def main():
     root = Path(__file__).resolve().parent.parent
     pdf = Path(sys.argv[1]) if len(sys.argv) > 1 else \
-        root / "报告" / "202400502133陈佳豪实验1.pdf"
+        root / "报告" / "实验1报告.pdf"
     if not pdf.is_file():
         print(f"[FAIL] 报告 PDF 不存在：{pdf}")
         return 1

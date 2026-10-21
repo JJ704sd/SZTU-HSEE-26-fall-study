@@ -29,7 +29,7 @@ import pypdf
 sys.stdout.reconfigure(encoding="utf-8")
 BASE = pathlib.Path(__file__).resolve().parent.parent
 PDF = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else (
-    BASE / "报告" / "202400502133陈佳豪实验1.pdf")
+    BASE / "报告" / "实验1报告.pdf")
 
 # (要求项, 语义, 关键词)
 #   语义 "all" = 每个关键词都必须出现；"any" = 命中其一即可。

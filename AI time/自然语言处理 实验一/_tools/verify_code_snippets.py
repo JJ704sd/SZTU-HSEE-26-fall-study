@@ -21,7 +21,7 @@ sys.stdout.reconfigure(encoding="utf-8")
 
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 ROOT = Path(r"D:\深技大课程学习\AI time\自然语言处理 实验一")
-DEFAULT_DOCX = ROOT / "报告" / "202400502133陈佳豪实验1.docx"
+DEFAULT_DOCX = ROOT / "报告" / "实验1报告.docx"
 DEFAULT_SRC = ROOT / "实验一" / "exp1_starter.py"
 
 CODE_FONTS = ("NSimSun", "Consolas")

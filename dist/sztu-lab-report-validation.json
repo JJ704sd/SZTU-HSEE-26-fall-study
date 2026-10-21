@@ -1,0 +1,59 @@
+{
+  "revision": "2026-10-20-r2",
+  "skill_structure": "passed",
+  "relative_links_checked": 18,
+  "regression_suite": {
+    "command": "python -X utf8 skills/sztu-lab-report/scripts/tests/test_inspect_docx.py",
+    "tests": 8,
+    "passed": 8,
+    "uses": "Self-contained temporary fixtures; no course data required"
+  },
+  "local_template_checks": [
+    {
+      "source": "嵌入式\\报告模版\\嵌入式实验报告模版(2).docx",
+      "full_characters": 35278,
+      "summary_characters": 11032
+    },
+    {
+      "source": "医院信息管理系统\\2025-医院信息系统实验报告模板.docx",
+      "full_characters": 40907,
+      "summary_characters": 10035
+    },
+    {
+      "source": "自然语言处理\\实验\\实验一指导书_NLP开发环境与基础文本处理等文件\\自然语言处理-实验报告模板.docx",
+      "full_characters": 41012,
+      "summary_characters": 11080
+    },
+    {
+      "source": "机器学习\\实验报告\\实验三\\实验3报告.docx",
+      "full_characters": 104596,
+      "summary_characters": 12590
+    }
+  ],
+  "forward_tests": {
+    "cases": 3,
+    "passed": 3,
+    "independent_agent": "/root/lab_skill_forward_test",
+    "record": "sztu-lab-report-forward-tests.json",
+    "scope": "Text-only writing requests, including synthetic training metrics; no full DOCX/PDF rendering or teacher acceptance",
+    "metric_recalculation": {
+      "best_supplied_epoch": 12,
+      "last_epoch": 30,
+      "best_supplied_gap_percentage_points": 4.5,
+      "last_gap_percentage_points": 14.0,
+      "test_accuracy_decline_percentage_points": 2.5
+    }
+  },
+  "pre_existing_course_files_checked": 1378,
+  "pre_existing_course_files_changed": [],
+  "package": {
+    "name": "sztu-lab-report.zip",
+    "files": 15,
+    "sha256": "db9d51028c76ab342fe45d77df5b98388be396a8a20d2a8a1561c181d3f8f481"
+  },
+  "installed_copy": {
+    "status": "synced",
+    "files": 15,
+    "all_hashes_match": true
+  }
+}

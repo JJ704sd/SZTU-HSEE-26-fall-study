@@ -3,9 +3,8 @@ import sys
 import tarfile
 from pathlib import Path
 
-SRC = Path(r"C:\Users\Administrator\.minimax\v2\assets\2026\10\09"
-           r"\09-22-19-559-asset_20261009-092219-559_cfba835818a7_9d75e442-实验课讲义+数据.tar")
-DST = Path(r"D:\深技大课程学习\AI time\实验一\材料")
+SRC = Path(sys.argv[1]).expanduser().resolve() if len(sys.argv) > 1 else Path("实验课讲义+数据.tar").resolve()
+DST = Path(__file__).resolve().parents[1] / "材料"
 
 if DST.exists():
     pass  # keep existing; overwrite files below

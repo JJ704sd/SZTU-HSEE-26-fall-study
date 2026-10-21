@@ -7,7 +7,7 @@ import pypdf
 
 sys.stdout.reconfigure(encoding="utf-8")
 BASE = pathlib.Path(__file__).resolve().parent.parent
-PDF = BASE / "报告" / "202400502133陈佳豪实验1.pdf"
+PDF = BASE / "报告" / "实验1报告.pdf"
 
 out = []
 for i, p in enumerate(pypdf.PdfReader(str(PDF)).pages, 1):

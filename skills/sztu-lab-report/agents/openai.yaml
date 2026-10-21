@@ -1,0 +1,4 @@
+interface:
+  display_name: "深技大实验报告"
+  short_description: "结合本地课程模板与真实实验材料，编写自然、准确且排版规范的实验报告"
+  default_prompt: "用 $sztu-lab-report 按本次课程指导书、模板和已有实验记录编写报告，保留指定版式，核对数据并如实说明 AI 辅助。"

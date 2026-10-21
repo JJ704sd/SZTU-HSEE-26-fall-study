@@ -61,7 +61,7 @@ def classify(p, in_table):
 def main():
     docx = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(
         r"D:\深技大课程学习\AI time\自然语言处理 实验一\报告"
-        r"\202400502133陈佳豪实验1.docx")
+        r"\实验1报告.docx")
     print(f"检查文件：{docx.name}\n")
     with zipfile.ZipFile(docx) as z:
         root = ET.fromstring(z.read("word/document.xml"))

@@ -28,7 +28,7 @@ OUT = ROOT / "实验一" / "outputs"
 # 报出一个针对别的文件的绿灯（旧坑，见 run_all.py 里关于假绿灯的注释）；
 # 可换根目录则让变异测试能在临时副本上跑，不必真的去改原始 data/。
 DOCX = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else (
-    ROOT / "报告" / "202400502133陈佳豪实验1.docx")
+    ROOT / "报告" / "实验1报告.docx")
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 
 FAILS = []

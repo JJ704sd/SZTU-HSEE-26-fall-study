@@ -23,8 +23,8 @@ sys.stdout.reconfigure(encoding="utf-8")
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 
 REPORT_DIR = Path(r"D:\深技大课程学习\AI time\自然语言处理 实验一\报告")
-DEFAULT_DOCX = REPORT_DIR / "202400502133陈佳豪实验1.docx"
-DEFAULT_PDF = REPORT_DIR / "202400502133陈佳豪实验1.pdf"
+DEFAULT_DOCX = REPORT_DIR / "实验1报告.docx"
+DEFAULT_PDF = REPORT_DIR / "实验1报告.pdf"
 
 # 「可见空格」符号：正文里写成 ␣␣ 是为了让"两个连续空格"肉眼可见。
 # 两套后端对它的处理可能不一致，所以比对时要把这类符号视为等价——

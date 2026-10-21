@@ -20,3 +20,17 @@ desktop.ini
 /医院信息管理系统/实验一/.env
 /医院信息管理系统/实验一/.env.*
 !/医院信息管理系统/实验一/.env.example
+
+# Local coursework originals and authoring/build intermediates
+/嵌入式/实验五/_tmp/
+/嵌入式/实验五/_extract/
+/嵌入式/实验五/*-实验五.docx
+/嵌入式/实验五/*-实验五.pdf
+/嵌入式/实验五/嵌入式实验报告五-*.docx
+/嵌入式/实验五/实验5 外部中断实验(3).rar
+/AI time/自然语言处理 实验一/实验一/_stage/
+/AI time/自然语言处理 实验一/报告/*实验1.docx
+/AI time/自然语言处理 实验一/报告/*实验1.pdf
+/AI time/自然语言处理 实验一/报告/原始底稿_*.docx
+/AI time/**/学生信息-*.xls
+/AI time/**/学生任务索引.xlsx

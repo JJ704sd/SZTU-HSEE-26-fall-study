@@ -51,7 +51,7 @@ def main():
     if args and args[0] == "--docx":
         target = Path(args[1]) if len(args) > 1 else Path(
             r"D:\深技大课程学习\AI time\自然语言处理 实验一\报告"
-            r"\202400502133陈佳豪实验1.docx")
+            r"\实验1报告.docx")
         text = docx_text(target)
         print(f"扫描 {target.name}  文本 {len(text)} 字符\n")
         miss = {}

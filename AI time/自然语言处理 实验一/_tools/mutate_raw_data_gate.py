@@ -31,7 +31,7 @@ ROOT = Path(__file__).resolve().parent.parent
 VERIFY = ROOT / "实验一" / "verify_report.py"
 
 IGNORE = shutil.ignore_patterns("__pycache__", "*.pyc", "原始底稿_*.docx", "_auth")
-DOCX_NAME = "202400502133陈佳豪实验1.docx"
+DOCX_NAME = "实验1报告.docx"
 # 正式件可能被 WPS 锁住而只能生成到暂存路径；沙箱必须用"本轮真正要交付的那份"
 SRC_DOCX = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else ROOT / "报告" / DOCX_NAME
 
