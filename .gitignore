@@ -34,3 +34,8 @@ desktop.ini
 /AI time/自然语言处理 实验一/报告/原始底稿_*.docx
 /AI time/**/学生信息-*.xls
 /AI time/**/学生任务索引.xlsx
+
+# Private originals and local NLP authoring intermediates
+/自然语言处理/实验/_work/
+/自然语言处理/实验/实验二/[0-9]*+*.pdf
+/嵌入式/实验五/嵌入式实验*报告-外部按键中断.docx
