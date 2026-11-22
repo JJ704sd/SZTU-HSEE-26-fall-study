@@ -1,0 +1,11 @@
+{
+  "dataset": "CBLUE KUAKE-QIC",
+  "source_partition": "公开dev，课程重新划分",
+  "official_project": "https://github.com/CBLUEbenchmark/CBLUE",
+  "official_download": "https://tianchi.aliyun.com/dataset/dataDetail?dataId=95414",
+  "actual_mirror": "https://huggingface.co/datasets/wyp/CBlue-KUAKE-QIC/resolve/main/KUAKE-QIC_dev.json",
+  "raw_sha256": "a572e0576afe8510bc9d6b25424f835e6d30e760109ac9fb48c8a77696aa2602",
+  "checked": "1955条、id/query/label、11类；未取得官方原件逐字比对",
+  "rights": "镜像无明确数据许可声明；引用与使用遵循官方数据条件，本材料不新增数据授权；代码仓库许可不等于数据许可",
+  "course_protocol": "1955清洗后1173/391/391，固定11类；非官方test，不与榜单直接比较"
+}

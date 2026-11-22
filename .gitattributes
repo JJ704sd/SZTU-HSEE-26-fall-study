@@ -1,0 +1,13 @@
+# Preserve binary coursework files exactly across Git checkouts.
+*.pdf binary
+*.docx binary
+*.pptx binary
+*.ppt binary
+*.zip binary
+*.rar binary
+*.tar binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.bin binary
+*.exe binary

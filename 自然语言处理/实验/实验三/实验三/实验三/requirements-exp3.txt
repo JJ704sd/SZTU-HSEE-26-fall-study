@@ -1,0 +1,8 @@
+# Python 3.11—3.13；torch用独立官方CPU安装命令，见指导书附录A
+numpy==2.2.6
+pandas==2.2.3
+scipy==1.15.3
+scikit-learn==1.6.1
+transformers==4.51.3
+huggingface-hub==0.30.2
+safetensors==0.5.3

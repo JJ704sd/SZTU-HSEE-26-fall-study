@@ -39,3 +39,20 @@ desktop.ini
 /自然语言处理/实验/_work/
 /自然语言处理/实验/实验二/[0-9]*+*.pdf
 /嵌入式/实验五/嵌入式实验*报告-外部按键中断.docx
+
+# Local authoring intermediates and sensitive source archives
+/医用生物力学/_build/
+/医用生物力学/_extract/
+/医用生物力学/_png/
+/医用生物力学/build/
+/医院信息管理系统/纸质作业一/_tmp/
+/机器学习/纸质作业2/_tmp/
+/嵌入式/实验五/*/*-实验五.docx
+/嵌入式/实验五/*/*-实验五.pdf
+/医院信息管理系统/实验二/orthanc-docker.zip
+/嵌入式/基于STM32小车课程设计.zip
+/嵌入式/基于STM32小车课程设计-教案和源代码.rar
+/嵌入式/实验14 串口实验.rar
+/嵌入式/实验20 光敏传感器-ADC实验.rar
+/嵌入式/实验8 定时器中断实验.rar
+/嵌入式/实验9 PWM输出实验.rar
